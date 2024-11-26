@@ -42,3 +42,4 @@ export const registerUsers = async (req:Request, res:Response):Promise<any> =>{
         return res.status(500).json({msg:"Hubo un error al crear el usuario"})
     }
 }
+
