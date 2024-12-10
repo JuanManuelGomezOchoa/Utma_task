@@ -39,10 +39,21 @@ const router = createBrowserRouter([
     element: <UserTasks/>
   }
 ]);
+
+const user = localStorage.user ? JSON.parse(localStorage.user): undefined;
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <>
+      {
+        user?.logined == true && (
+        <></>
+        )
+      }
+      <RouterProvider router={router} />
+    </>
   </React.StrictMode>
 );
 

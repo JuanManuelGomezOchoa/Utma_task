@@ -7,7 +7,7 @@ export interface IUser{
     rol: "administrator" | "client"
 }
 
-export interface IActivity{
+export interface ITask{
     title:string;
     expirationDate:string;
     description:string;

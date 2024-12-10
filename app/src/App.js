@@ -1,32 +1,39 @@
-import { Button, Card, Container, Form } from "react-bootstrap";
+import { Button, Card, Container, Form, Nav} from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { useState } from "react";
-import { validateLogin, conteoErrores } from "./validaciones";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export const App = ()=>{
-  const [datos, setData] = useState({});
   
-  const onChangeLogin = (e) => {
-    e.preventDefault();
-    const { name, value } = e.target;
-    setData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-    console.log(datos);
-  };
+  const [data, setData] = useState({});
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const errores = validateLogin(datos);
-    
-    if (!conteoErrores(errores)) {
+  const navigate = useNavigate();
 
-      alert("Por favor, revisa los campos: " + Object.values(errores).join("\n"));
-      return;
-    }
-    
-    console.log("Formulario válido, enviando datos:", datos);
-  };
+  const onChange = (e) => {
+    e.preventDefault();
+    const loginData = data;
+    loginData[e.target.name] = e.target.value;
+    setData(loginData)
+  }
+
+  const onSubmit = async () => {
+    try {
+     const res = await axios.post("http://localhost:4001/users/login/", data)
+     const user = res.data.user
+     user.logined = true
+     localStorage.user = JSON.stringify(user) 
+     if (user.rol == "administrator"){
+      navigate("/Admin")
+     }else{
+      navigate("/Inicio")
+     }
+
+  } catch (error) {
+      alert("La informacion proporcionada es incorrecta")
+  }
+    console.log(data)
+  }
 
   return (
     <>
@@ -38,12 +45,13 @@ export const App = ()=>{
 
       <Card>
       <Form>
-        <Card.Title className="mt-3">Nombre:</Card.Title>
-      <Form.Control className="mb-3" name="name" placeholder="Ingresa tu nombre" onChange={onChangeLogin}/>
+        <Card.Title className="mt-3">Ingresa tu correo electronico:</Card.Title>
+      <Form.Control className="mb-3" name="email" placeholder="Ingresa tu correo electronico" onChange={onChange}/>
         <Card.Title >Contraseña</Card.Title>
-      <Form.Control className="mb-3" name="password" placeholder="Ingresa tu contraseña" onChange={onChangeLogin}/>
+      <Form.Control className="mb-3" name="password" placeholder="Ingresa tu contraseña" onChange={onChange}/>
       </Form>
-      <Button variant="success" onClick={handleSubmit}>Iniciar sesion</Button>
+      <Button variant="success" onClick={() => onSubmit()}>Iniciar sesion</Button>
+      <Nav.Link as={Link} to={"/Register"}>Crear cuenta</Nav.Link>
       </Card>
 
 

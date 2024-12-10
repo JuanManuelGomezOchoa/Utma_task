@@ -1,7 +1,7 @@
  import { Schema, model } from "mongoose";
- import { IActivity } from "../GlobalTypes";
+ import { ITask } from "../GlobalTypes";
 
- const ActivitySchema = new Schema<IActivity>({
+ const TaskSchema = new Schema<ITask>({
     title:{
         type: String,
         required: true
@@ -26,4 +26,4 @@
     }
  })
 
- export const ActivitiesModel = model("activities", ActivitySchema);
+ export const TaskModel = model("tasks", TaskSchema);
